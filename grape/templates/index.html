@@ -4,10 +4,13 @@
 <ul class="list-group mb-4">
     {% for wine in wines %}
     <li class="list-group-item">
-        <strong>{{ wine[0] }}</strong> ({{ wine[1] }}) – {{ wine[2] }} × {{ wine[3] }}
+        <a href="{{ url_for('wine_detail', wine_id=wine.id) }}">
+            <strong>{{ wine.name }}</strong> ({{ wine.year }}) – {{ wine.type }} × {{ wine.quantity }}
+        </a>
     </li>
     {% endfor %}
 </ul>
+
 
 <h3>Add a Wine</h3>
 <form action="{{ url_for('add_wine') }}" method="post" class="row g-3">
