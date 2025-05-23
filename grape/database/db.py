@@ -1,9 +1,8 @@
 import sqlite3
-
-DB_PATH = "wine_cellar.db"
+import grape.config as config
 
 def get_connection():
-    return sqlite3.connect(DB_PATH)
+    return sqlite3.connect(config.DB_PATH)
 
 def init_db():
     conn = get_connection()

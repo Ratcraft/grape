@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Wine List</h2>
+<ul class="list-group mb-4">
+    {% for wine in wines %}
+    <li class="list-group-item">
+        <strong>{{ wine[0] }}</strong> ({{ wine[1] }}) – {{ wine[2] }} × {{ wine[3] }}
+    </li>
+    {% endfor %}
+</ul>
+
+<h3>Add a Wine</h3>
+<form action="{{ url_for('add_wine') }}" method="post" class="row g-3">
+    <div class="col-md-3"><input class="form-control" name="name" placeholder="Name" required></div>
+    <div class="col-md-2"><input class="form-control" name="year" placeholder="Year" required></div>
+    <div class="col-md-3"><input class="form-control" name="type" placeholder="Type" required></div>
+    <div class="col-md-2"><input class="form-control" name="quantity" placeholder="Quantity" required></div>
+    <div class="col-md-2"><button type="submit" class="btn btn-success">Add</button></div>
+</form>
+{% endblock %}
