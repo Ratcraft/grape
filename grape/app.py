@@ -7,18 +7,25 @@ init_db()
 
 @app.route('/')
 def index():
-    wines = Wine.get_all_wines()
-    return render_template('index.html', wines=wines)
+    name_filter = request.args.get("name", "")
+    min_quantity = request.args.get("min_quantity", "")
+    year_filter = request.args.get("year", "")
 
-@app.route('/add', methods=['POST'])
+    wines = Wine.get_all_wines_filtered(name_filter, min_quantity, year_filter)
+    return render_template("index.html", wines=wines)
+
+
+@app.route('/add', methods=['GET', 'POST'])
 def add_wine():
-    name = request.form['name']
-    year = request.form['year']
-    type = request.form['type']
-    quantity = request.form['quantity']
-    wine = Wine(name, int(year), type, int(quantity))
-    Wine.add_wine(wine)
-    return redirect(url_for('index'))
+    if request.method == 'POST':
+        name = request.form['name']
+        year = request.form['year']
+        type = request.form['type']
+        quantity = request.form['quantity']
+        wine = Wine(name, int(year), type, int(quantity))
+        Wine.add_wine(wine)
+        return redirect(url_for('index'))
+    return render_template('add_wine.html')
 
 @app.route('/info')
 def wine_info():

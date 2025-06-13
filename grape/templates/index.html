@@ -1,23 +1,39 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2>Wine List</h2>
-<ul class="list-group mb-4">
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <input type="text" name="name" value="{{ request.args.get('name', '') }}" class="form-control" placeholder="Search by name">
+        </div>
+        <div class="col-md-3">
+            <input type="number" name="min_quantity" value="{{ request.args.get('min_quantity', '') }}" class="form-control" placeholder="Min quantity">
+        </div>
+        <div class="col-md-3">
+            <input type="number" name="year" value="{{ request.args.get('year', '') }}" class="form-control" placeholder="Year">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
+
+    <h2>Liste des vins<i class="fa-solid fa-wine-bottle"></i></h2>
+    <div class="row">
     {% for wine in wines %}
-    <li class="list-group-item">
-        <a href="{{ url_for('wine_detail', wine_id=wine.id) }}">
-            <strong>{{ wine.name }}</strong> ({{ wine.year }}) – {{ wine.type }} × {{ wine.quantity }}
-        </a>
-    </li>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm wine-card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{{ url_for('wine_detail', wine_id=wine.id) }}" class="text-dark text-decoration-none">
+                        {{ wine.name }}
+                    </a>
+                </h5>
+                <p class="card-text">
+                    <strong>Year:</strong> {{ wine.year }}<br>
+                    <strong>Type:</strong> {{ wine.type }}<br>
+                    <strong>Qty:</strong> {{ wine.quantity }}
+                </p>
+            </div>
+        </div>
+    </div>
     {% endfor %}
-</ul>
-
-
-<h3>Add a Wine</h3>
-<form action="{{ url_for('add_wine') }}" method="post" class="row g-3">
-    <div class="col-md-3"><input class="form-control" name="name" placeholder="Name" required></div>
-    <div class="col-md-2"><input class="form-control" name="year" placeholder="Year" required></div>
-    <div class="col-md-3"><input class="form-control" name="type" placeholder="Type" required></div>
-    <div class="col-md-2"><input class="form-control" name="quantity" placeholder="Quantity" required></div>
-    <div class="col-md-2"><button type="submit" class="btn btn-success">Add</button></div>
-</form>
+    </div>
 {% endblock %}

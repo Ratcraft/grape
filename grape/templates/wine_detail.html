@@ -1,17 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2>Edit Wine: {{ wine.name }}</h2>
+    <h2>Edit Wine: {{ wine.name }}</h2>
 
-<form action="{{ url_for('edit_wine', wine_id=wine.id) }}" method="post" class="row g-3 mb-4">
-    <input name="name" value="{{ wine.name }}" class="form-control col-md-3">
-    <input name="year" value="{{ wine.year }}" class="form-control col-md-2">
-    <input name="type" value="{{ wine.type }}" class="form-control col-md-3">
-    <input name="quantity" value="{{ wine.quantity }}" class="form-control col-md-2">
-    <button class="btn btn-warning col-md-2" type="submit">Save</button>
-</form>
+    <div>
+        <form action="{{ url_for('edit_wine', wine_id=wine.id) }}" method="post">
+            <input name="name" value="{{ wine.name }}" class="form-control">
+            <input name="year" value="{{ wine.year }}" class="form-control">
+            <input name="type" value="{{ wine.type }}" class="form-control">
+            <input name="quantity" value="{{ wine.quantity }}" class="form-control">
+            <button class="btn btn-warning d-inline-flex" type="submit">Save</button>
+        </form>
 
-<form action="{{ url_for('delete_wine', wine_id=wine.id) }}" method="post">
-    <button type="submit" class="btn btn-danger">Delete</button>
-</form>
-
+        <form action="{{ url_for('delete_wine', wine_id=wine.id) }}" method="post">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
 {% endblock %}
