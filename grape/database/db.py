@@ -13,7 +13,11 @@ def init_db():
             name TEXT NOT NULL,
             year INTEGER,
             type TEXT,
-            quantity INTEGER
+            quantity INTEGER,
+            price REAL,
+            volume_ml INTEGER,
+            cellar_slot TEXT,
+            purchase_location TEXT
         )
     """)
     conn.commit()

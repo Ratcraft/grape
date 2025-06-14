@@ -2,25 +2,37 @@
 {% block content %}
 <h2 class="mb-4">Ajouter un nouveau vin</h2>
 
-<form method="POST" class="row g-3 mb-5">
+<form method="POST">
+  <div class="row mb-3 fs-5">
     <div class="col-md-6">
-        <label class="form-label">Nom du vin</label>
-        <input type="text" name="name" class="form-control" placeholder="Bordeaux / Beaujolais / Champagne" required>
+      <label for="name" class="form-label">Nom du vin</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Bordeaux / Beaujolais / Champagne" required>
 
-        <label class="form-label mt-3">Année du vin</label>
-        <input type="number" name="year" class="form-control" placeholder="e.g. 2020" required>
+      <label for="year" class="form-label mt-3">Année du vin</label>
+      <input type="number" class="form-control" id="year" name="year" placeholder="e.g 2001" required>
+
+      <label for="price" class="form-label mt-3">Prix (en €)</label>
+      <input type="number" step="0.01" class="form-control" id="price" placeholder="e.g 15" name="price">
+
+      <label for="purchase_location" class="form-label mt-3">Lieu d'achat</label>
+      <input type="text" class="form-control" id="purchase_location" name="purchase_location" placeholder="Carrefour / Intermarché">
     </div>
 
     <div class="col-md-6">
-        <label class="form-label">Type du vin</label>
-        <input type="text" name="type" class="form-control" placeholder="Rouge / Blanc / Rosé" required>
+      <label for="type" class="form-label">Type</label>
+      <input type="text" class="form-control" id="type" name="type" placeholder="Rouge / Blanc / Rosé" required>
 
-        <label class="form-label mt-3">Quantité (en bouteille) </label>
-        <input type="number" name="quantity" class="form-control" placeholder="e.g. 12" required>
-    </div>
+      <label for="quantity" class="form-label mt-3">Quantité (en bouteille)</label>
+      <input type="number" class="form-control" id="quantity" name="quantity" placeholder="e.g 8" required>
 
-    <div class="col-12 mt-3">
-        <button type="submit" class="btn btn-success">Créer un nouveau vin</button>
+      <label for="volume_ml" class="form-label mt-3">Volume de la bouteille (en ml)</label>
+      <input type="number" class="form-control" id="volume_ml" name="volume_ml" placeholder="e.g 75">
+
+      <label for="cellar_slot" class="form-label mt-3">Emplacement dans la cave</label>
+      <input type="text" class="form-control" id="cellar_slot" name="cellar_slot" placeholder="A3">
     </div>
+  </div>
+  <button type="submit" class="btn btn-primary fs-5">Ajouter le vin</button>
 </form>
+
 {% endblock %}

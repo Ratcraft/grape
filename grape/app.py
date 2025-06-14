@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+import os
+
+from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 
 from grape import config
 from models.wine_model import Wine
@@ -7,6 +9,7 @@ from database.db import init_db
 app = Flask(__name__)
 app.secret_key = config.APP_SECRET  # nécessaire pour utiliser flash
 init_db()
+
 
 @app.route('/')
 def index():
@@ -25,7 +28,11 @@ def add_wine():
         year = request.form['year']
         type = request.form['type']
         quantity = request.form['quantity']
-        wine = Wine(name, int(year), type, int(quantity))
+        price = request.form['price']
+        volume_ml = request.form['volume_ml']
+        purchase_location = request.form['purchase_location']
+        cellar_slot = request.form['cellar_slot']
+        wine = Wine(name, int(year), type, int(quantity), int(price), int(volume_ml), purchase_location, cellar_slot)
         Wine.add_wine(wine)
         return redirect(url_for('index'))
     return render_template('add_wine.html')

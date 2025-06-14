@@ -2,36 +2,53 @@
 {% block content %}
     <h2 class="mb-4">{{ wine.name }} ({{ wine.year }})</h2>
 
-    <!-- Formulaire principal : modification complète -->
-    <form method="POST" action="{{ url_for('update_wine', wine_id=wine.id) }}" class="row g-3 mb-5">
-        <div class="col-md-6">
-            <label class="form-label">Nom du vin</label>
-            <input type="text" name="name" class="form-control" value="{{ wine.name }}" required>
-            <label class="form-label mt-3">Année du vin</label>
-            <input type="number" name="year" class="form-control" value="{{ wine.year }}" required>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Type du vin</label>
-            <input type="text" name="type" class="form-control" value="{{ wine.type }}" required>
-            <label class="form-label mt-3">Quantité (en bouteille)</label>
-            <input type="number" name="quantity" class="form-control" value="{{ wine.quantity }}" required>
-        </div>
-        <div class="col-12 mt-3">
-            <button type="submit" class="btn btn-primary">Sauvegarder les changements <i class='bx bx-edit'></i></button>
-            <a href="{{ url_for('delete_wine', wine_id=wine.id) }}" class="btn btn-danger ms-2">Supprimer le vin <i class='bx bx-trash'></i> </a>
-        </div>
-    </form>
+    <form method="POST">
+  <div class="row mb-3 fs-5">
+    <div class="col-md-6">
+      <label for="name" class="form-label">Nom du vin</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ wine.name }}" required>
 
-    <!-- Formulaire secondaire : modification rapide de la quantité -->
-    <hr>
-    <p class="text-muted mb-2">Mise à jour rapide: combien de bouteille avez-vous bu ?</p>
-    <form method="POST" action="{{ url_for('consume_wine', wine_id=wine.id) }}" class="row g-2">
-        <div class="col-auto">
-            <input type="number" name="consumed" class="form-control" min="1" max="{{ wine.quantity }}" required>
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-outline-secondary">Valider</button>
-        </div>
-    </form>
+      <label for="year" class="form-label mt-3">Année du vin</label>
+      <input type="number" class="form-control" id="year" name="year" value="{{ wine.year }}" required>
+
+      <label for="price" class="form-label mt-3">Prix (€)</label>
+      <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ wine.price or '' }}">
+
+      <label for="purchase_location" class="form-label mt-3">Lieu d'achat</label>
+      <input type="text" class="form-control" id="purchase_location" name="purchase_location" value="{{ wine.purchase_location or '' }}">
+    </div>
+
+    <div class="col-md-6">
+      <label for="type" class="form-label">Type</label>
+      <input type="text" class="form-control" id="type" name="type" value="{{ wine.type }}" required>
+
+      <label for="quantity" class="form-label mt-3">Quantité (en bouteille)</label>
+      <input type="number" class="form-control" id="quantity" name="quantity" value="{{ wine.quantity }}" required>
+
+      <label for="volume_ml" class="form-label mt-3">Volume de la bouteille (ml)</label>
+      <input type="number" class="form-control" id="volume_ml" name="volume_ml" value="{{ wine.volume_ml or '' }}">
+
+      <label for="cellar_slot" class="form-label mt-3">Emplacement dans la cave</label>
+      <input type="text" class="form-control" id="cellar_slot" name="cellar_slot" value="{{ wine.cellar_slot or '' }}">
+    </div>
+  </div>
+
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Sauvegarder les changements <i class='bx bx-edit'></i></button>
+        <a href="{{ url_for('delete_wine', wine_id=wine.id) }}" class="btn btn-danger ms-2">Supprimer le vin <i class='bx bx-trash'></i> </a>
+    </div>
+</form>
+
+<hr class="my-4">
+
+<!-- Formulaire pour modifier uniquement la quantité -->
+<form method="POST" action="{{ url_for('consume_wine', wine_id=wine.id) }}" class="fs-5">
+  <div class="mb-3">
+    <label for="consumed" class="form-label">Mise à jour rapide: combien de bouteille avez-vous bu ?</label>
+    <input type="number" class="form-control" id="consumed" name="consumed" required>
+  </div>
+  <button type="submit" class="btn btn-warning">Valider</button>
+</form>
+
 
 {% endblock %}
