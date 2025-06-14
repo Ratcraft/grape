@@ -1,22 +1,26 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2 class="mb-4">Add a New Wine</h2>
+<h2 class="mb-4">Ajouter un nouveau vin</h2>
 
-<form method="post" class="row g-3">
-    <div class="col-md-4">
-        <input type="text" name="name" class="form-control" placeholder="Name" required>
+<form method="POST" class="row g-3 mb-5">
+    <div class="col-md-6">
+        <label class="form-label">Nom du vin</label>
+        <input type="text" name="name" class="form-control" placeholder="Bordeaux / Beaujolais / Champagne" required>
+
+        <label class="form-label mt-3">Année du vin</label>
+        <input type="number" name="year" class="form-control" placeholder="e.g. 2020" required>
     </div>
-    <div class="col-md-2">
-        <input type="number" name="year" class="form-control" placeholder="Year" required>
+
+    <div class="col-md-6">
+        <label class="form-label">Type du vin</label>
+        <input type="text" name="type" class="form-control" placeholder="Rouge / Blanc / Rosé" required>
+
+        <label class="form-label mt-3">Quantité (en bouteille) </label>
+        <input type="number" name="quantity" class="form-control" placeholder="e.g. 12" required>
     </div>
-    <div class="col-md-3">
-        <input type="text" name="type" class="form-control" placeholder="Type" required>
-    </div>
-    <div class="col-md-2">
-        <input type="number" name="quantity" class="form-control" placeholder="Quantity" required>
-    </div>
-    <div class="col-md-1">
-        <button type="submit" class="btn btn-success w-100">Add</button>
+
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-success">Créer un nouveau vin</button>
     </div>
 </form>
 {% endblock %}

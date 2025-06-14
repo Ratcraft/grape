@@ -49,6 +49,20 @@ class Wine:
         conn.commit()
         conn.close()
 
+    def save(self):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+                       UPDATE wines
+                       SET name     = ?,
+                           year     = ?,
+                           type     = ?,
+                           quantity = ?
+                       WHERE id = ?
+                       """, (self.name, self.year, self.type, self.quantity, self.id))
+        conn.commit()
+        conn.close()
+
     @staticmethod
     def delete_wine(wine_id):
         conn = get_connection()

@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
+
+from grape import config
 from models.wine_model import Wine
 from database.db import init_db
 
 app = Flask(__name__)
+app.secret_key = config.APP_SECRET  # nécessaire pour utiliser flash
 init_db()
 
 @app.route('/')
@@ -47,9 +50,41 @@ def edit_wine(wine_id):
     Wine.update_wine(wine_id, name, year, type, quantity)
     return redirect(url_for('wine_detail', wine_id=wine_id))
 
-@app.route('/wine/<int:wine_id>/delete', methods=["POST"])
+@app.route('/wine/<int:wine_id>/consume', methods=['POST'])
+def consume_wine(wine_id):
+    try:
+        to_consume = int(request.form['consumed'])
+        wine = Wine.get_wine_by_id(wine_id)
+
+        if wine and to_consume > 0:
+            if to_consume > wine.quantity:
+                flash(f"Cannot consume {to_consume} bottles. Only {wine.quantity} available.", "danger")
+            else:
+                wine.quantity -= to_consume
+                wine.save()
+                flash(f"{to_consume} bouteille(s) consommées", "success")
+    except ValueError:
+        flash("Invalid input for quantity.", "danger")
+
+    return redirect(url_for('wine_detail', wine_id=wine_id))
+
+@app.route('/wine/<int:wine_id>/update', methods=['POST'])
+def update_wine(wine_id):
+    wine = Wine.get_wine_by_id(wine_id)
+    if wine:
+        wine.name = request.form['name']
+        wine.year = request.form['year']
+        wine.type = request.form['type']
+        wine.quantity = request.form['quantity']
+        wine.save()
+        flash('Changements sur le vin effectués', 'success')
+    return redirect(url_for('wine_detail', wine_id=wine_id))
+
+
+@app.route('/wine/<int:wine_id>/delete', methods=["GET"])
 def delete_wine(wine_id):
     Wine.delete_wine(wine_id)
+    flash(f'Le vin est supprimé !', 'success')
     return redirect(url_for('index'))
 
 

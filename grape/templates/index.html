@@ -2,38 +2,37 @@
 {% block content %}
     <form method="get" class="row g-3 mb-4">
         <div class="col-md-4">
-            <input type="text" name="name" value="{{ request.args.get('name', '') }}" class="form-control" placeholder="Search by name">
+            <input type="text" name="name" value="{{ request.args.get('name', '') }}" class="form-control" placeholder="Chercher par nom">
         </div>
         <div class="col-md-3">
-            <input type="number" name="min_quantity" value="{{ request.args.get('min_quantity', '') }}" class="form-control" placeholder="Min quantity">
+            <input type="number" name="min_quantity" value="{{ request.args.get('min_quantity', '') }}" class="form-control" placeholder="Quantité minimum">
         </div>
         <div class="col-md-3">
-            <input type="number" name="year" value="{{ request.args.get('year', '') }}" class="form-control" placeholder="Year">
+            <input type="number" name="year" value="{{ request.args.get('year', '') }}" class="form-control" placeholder="Année du vin">
         </div>
         <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100">Filter</button>
+            <button type="submit" class="btn btn-primary w-100">Filtrer</button>
         </div>
     </form>
 
-    <h2>Liste des vins<i class="fa-solid fa-wine-bottle"></i></h2>
+    <h2>Liste des vins <i class='bx bx-wine'></i></h2>
     <div class="row">
     {% for wine in wines %}
     <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm wine-card">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a href="{{ url_for('wine_detail', wine_id=wine.id) }}" class="text-dark text-decoration-none">
-                        {{ wine.name }}
-                    </a>
-                </h5>
-                <p class="card-text">
-                    <strong>Year:</strong> {{ wine.year }}<br>
-                    <strong>Type:</strong> {{ wine.type }}<br>
-                    <strong>Qty:</strong> {{ wine.quantity }}
-                </p>
+        <a href="{{ url_for('wine_detail', wine_id=wine.id) }}" class="text-decoration-none text-dark">
+            <div class="card h-100 shadow-sm wine-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ wine.name }}</h5>
+                    <p class="card-text">
+                        <strong>Année:</strong> {{ wine.year }}<br>
+                        <strong>Type:</strong> {{ wine.type }}<br>
+                        <strong>Quantité:</strong> {{ wine.quantity }}
+                    </p>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
+
     {% endfor %}
     </div>
 {% endblock %}

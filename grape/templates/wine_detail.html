@@ -1,18 +1,37 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h2>Edit Wine: {{ wine.name }}</h2>
+    <h2 class="mb-4">{{ wine.name }} ({{ wine.year }})</h2>
 
-    <div>
-        <form action="{{ url_for('edit_wine', wine_id=wine.id) }}" method="post">
-            <input name="name" value="{{ wine.name }}" class="form-control">
-            <input name="year" value="{{ wine.year }}" class="form-control">
-            <input name="type" value="{{ wine.type }}" class="form-control">
-            <input name="quantity" value="{{ wine.quantity }}" class="form-control">
-            <button class="btn btn-warning d-inline-flex" type="submit">Save</button>
-        </form>
+    <!-- Formulaire principal : modification complète -->
+    <form method="POST" action="{{ url_for('update_wine', wine_id=wine.id) }}" class="row g-3 mb-5">
+        <div class="col-md-6">
+            <label class="form-label">Nom du vin</label>
+            <input type="text" name="name" class="form-control" value="{{ wine.name }}" required>
+            <label class="form-label mt-3">Année du vin</label>
+            <input type="number" name="year" class="form-control" value="{{ wine.year }}" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Type du vin</label>
+            <input type="text" name="type" class="form-control" value="{{ wine.type }}" required>
+            <label class="form-label mt-3">Quantité (en bouteille)</label>
+            <input type="number" name="quantity" class="form-control" value="{{ wine.quantity }}" required>
+        </div>
+        <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-primary">Sauvegarder les changements <i class='bx bx-edit'></i></button>
+            <a href="{{ url_for('delete_wine', wine_id=wine.id) }}" class="btn btn-danger ms-2">Supprimer le vin <i class='bx bx-trash'></i> </a>
+        </div>
+    </form>
 
-        <form action="{{ url_for('delete_wine', wine_id=wine.id) }}" method="post">
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-    </div>
+    <!-- Formulaire secondaire : modification rapide de la quantité -->
+    <hr>
+    <p class="text-muted mb-2">Mise à jour rapide: combien de bouteille avez-vous bu ?</p>
+    <form method="POST" action="{{ url_for('consume_wine', wine_id=wine.id) }}" class="row g-2">
+        <div class="col-auto">
+            <input type="number" name="consumed" class="form-control" min="1" max="{{ wine.quantity }}" required>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-outline-secondary">Valider</button>
+        </div>
+    </form>
+
 {% endblock %}
