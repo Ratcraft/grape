@@ -23,3 +23,21 @@ def init_db():
     """)
     conn.commit()
     conn.close()
+
+def make_request(query, params=(), fetch="all"):
+    """
+    fetch: "all", "one", "none"
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(query, params)
+
+    result = None
+    if fetch == "all":
+        result = cursor.fetchall()
+    elif fetch == "one":
+        result = cursor.fetchone()
+
+    conn.commit()
+    conn.close()
+    return result
