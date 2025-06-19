@@ -40,10 +40,10 @@
 </form>
 
 <form method="POST" action="{{ url_for('toggle_favorite', wine_id=wine.id) }}">
-    <button type="submit" class="btn btn-warning">
-            {% if wine.is_favorite %}★ Remove Favorite{% else %}Mettre en favori ☆{% endif %}
-            </button>
-        </form>
+    <button type="submit" class="btn btn-warning mt-3">
+        {% if wine.is_favorite %}★ Supprimer le favori{% else %}Mettre en favori ☆{% endif %}
+    </button>
+</form>
 
 
 <hr class="my-4">

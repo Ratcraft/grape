@@ -22,15 +22,16 @@
         <a href="{{ url_for('wine_detail', wine_id=wine.id) }}" class="text-decoration-none text-dark">
             <div class="card h-100 shadow-sm wine-card">
                 <div class="card-body">
-                    <h5 class="card-title">{{ wine.name }}</h5>
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title">{{ wine.name }}</h5>
+                        {% if wine.is_favorite %}
+                            <span class="badge bg-warning text-dark align-self-center">★ Favoris</span>
+                        {% endif %}
+                    </div>
                     <p class="card-text">
-                        <strong>bool:</strong> {{ wine.is_favorite }}<br>
                         <strong>Année:</strong> {{ wine.year }}<br>
                         <strong>Type:</strong> {{ wine.type }}<br>
                         <strong>Quantité:</strong> {{ wine.quantity }}
-                        {% if wine.is_favorite %}
-                            <span class="badge bg-warning text-dark">★ Favoris</span>
-                        {% endif %}
                     </p>
                 </div>
             </div>
