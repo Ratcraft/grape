@@ -2,7 +2,7 @@ from grape.database.db import get_connection
 
 class Wine:
     def __init__(self, name, year, type, quantity, price=None, volume_ml=None, cellar_slot=None,
-                 purchase_location=None, wine_id=None):
+                 purchase_location=None, is_favorite=False, wine_id=None):
         self.id = wine_id
         self.name = name
         self.year = year
@@ -12,6 +12,7 @@ class Wine:
         self.volume_ml = volume_ml
         self.cellar_slot = cellar_slot
         self.purchase_location = purchase_location
+        self.is_favorite = is_favorite
 
     @staticmethod
     def add_wine(wine):
@@ -32,7 +33,7 @@ class Wine:
         conn = get_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT id, name, year, type, quantity, price, volume_ml, cellar_slot, purchase_location
+            SELECT id, name, year, type, quantity, price, volume_ml, cellar_slot, purchase_location, is_favorite
             FROM wines
         """)
         rows = cursor.fetchall()
@@ -48,7 +49,7 @@ class Wine:
         conn = get_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT id, name, year, type, quantity, price, volume_ml, cellar_slot, purchase_location
+            SELECT id, name, year, type, quantity, price, volume_ml, cellar_slot, purchase_location, is_favorite
             FROM wines
             WHERE id = ?
         """, (wine_id,))
@@ -65,7 +66,8 @@ class Wine:
         cursor = conn.cursor()
         cursor.execute("""
             UPDATE wines
-            SET name = ?, year = ?, type = ?, quantity = ?, price = ?, volume_ml = ?, cellar_slot = ?, purchase_location = ?
+            SET name = ?, year = ?, type = ?, quantity = ?, price = ?, volume_ml = ?, cellar_slot = ?, purchase_location = ?,
+                is_favorite = ?
             WHERE id = ?
         """, (name, year, wine_type, quantity, price, volume_ml, cellar_slot, purchase_location, wine_id))
         conn.commit()
@@ -76,7 +78,8 @@ class Wine:
         cursor = conn.cursor()
         cursor.execute("""
             UPDATE wines
-            SET name = ?, year = ?, type = ?, quantity = ?, price = ?, volume_ml = ?, cellar_slot = ?, purchase_location = ?
+            SET name = ?, year = ?, type = ?, quantity = ?, price = ?, volume_ml = ?, cellar_slot = ?, purchase_location = ?,
+                is_favorite = ?
             WHERE id = ?
         """, (self.name, self.year, self.type, self.quantity, self.price,
               self.volume_ml, self.cellar_slot, self.purchase_location, self.id))
@@ -96,7 +99,7 @@ class Wine:
         conn = get_connection()
         cursor = conn.cursor()
         query = """
-            SELECT id, name, year, type, quantity, price, volume_ml, cellar_slot, purchase_location
+            SELECT id, name, year, type, quantity, price, volume_ml, cellar_slot, purchase_location, is_favorite
             FROM wines WHERE 1=1
         """
         params = []
@@ -111,6 +114,9 @@ class Wine:
             query += " AND year = ?"
             params.append(year)
 
+        # Ajout du tri par favoris d'abord
+        query += " ORDER BY is_favorite DESC, name ASC"
+
         cursor.execute(query, tuple(params))
         rows = cursor.fetchall()
         conn.close()
@@ -120,3 +126,12 @@ class Wine:
                  cellar_slot=row[7], purchase_location=row[8], wine_id=row[0])
             for row in rows
         ]
+
+    def toggle_favorite(self):
+        self.is_favorite = not self.is_favorite
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE wines SET is_favorite = ? WHERE id = ?", (int(self.is_favorite), self.id))
+        conn.commit()
+        conn.close()
+

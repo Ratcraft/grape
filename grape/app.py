@@ -83,6 +83,10 @@ def update_wine(wine_id):
         wine.year = request.form['year']
         wine.type = request.form['type']
         wine.quantity = request.form['quantity']
+        wine.price = request.form['price']
+        wine.cellar_slot = request.form['cellar_slot']
+        wine.volume_ml = request.form['volume_ml']
+        wine.purchase_location = request.form['purchase_location']
         wine.save()
         flash('Changements sur le vin effectués', 'success')
     return redirect(url_for('wine_detail', wine_id=wine_id))
@@ -93,6 +97,18 @@ def delete_wine(wine_id):
     Wine.delete_wine(wine_id)
     flash(f'Le vin est supprimé !', 'success')
     return redirect(url_for('index'))
+
+
+@app.route('/wine/<int:wine_id>/toggle_favorite', methods=['POST'])
+def toggle_favorite(wine_id):
+    wine = Wine.get_wine_by_id(wine_id)
+    if wine:
+        wine.toggle_favorite()
+        flash("Favorite status updated.", "success")
+    else:
+        flash("Wine not found.", "danger")
+    return redirect(url_for('wine_detail', wine_id=wine_id))
+
 
 
 if __name__ == '__main__':

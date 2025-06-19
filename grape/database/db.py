@@ -17,7 +17,8 @@ def init_db():
             price REAL,
             volume_ml INTEGER,
             cellar_slot TEXT,
-            purchase_location TEXT
+            purchase_location TEXT,
+            is_favorite BOOLEAN
         )
     """)
     conn.commit()

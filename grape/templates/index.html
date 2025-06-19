@@ -24,9 +24,13 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ wine.name }}</h5>
                     <p class="card-text">
+                        <strong>bool:</strong> {{ wine.is_favorite }}<br>
                         <strong>Année:</strong> {{ wine.year }}<br>
                         <strong>Type:</strong> {{ wine.type }}<br>
                         <strong>Quantité:</strong> {{ wine.quantity }}
+                        {% if wine.is_favorite %}
+                            <span class="badge bg-warning text-dark">★ Favoris</span>
+                        {% endif %}
                     </p>
                 </div>
             </div>
