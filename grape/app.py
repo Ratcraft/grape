@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from grape import config
 from models.wine_model import Wine
+from models.event import Event
 from database.db import init_db
 
 app = Flask(__name__)
@@ -41,13 +42,16 @@ def add_wine():
     return render_template('add_wine.html')
 
 
-@app.route('/wine/<int:wine_id>')
+@app.route("/wine/<int:wine_id>")
 def wine_detail(wine_id):
     wine = Wine.get_wine_by_id(wine_id)
     if not wine:
-        flash("Vin non trouvé.", "danger")
+        flash("Vin introuvable", "danger")
         return redirect(url_for('index'))
-    return render_template("wine_detail.html", wine=wine)
+
+    events = Event.get_events_for_wine(wine_id)
+    return render_template("wine_detail.html", wine=wine, events=events)
+
 
 
 @app.route('/wine/<int:wine_id>/edit', methods=['POST'])
@@ -110,9 +114,37 @@ def toggle_favorite(wine_id):
     return redirect(url_for('wine_detail', wine_id=wine_id))
 
 
-@app.route('/info')
-def wine_info():
-    return render_template('wine_info.html')
+@app.route('/wine/<int:wine_id>/add_event', methods=['POST'])
+def add_event(wine_id):
+    wine = Wine.get_wine_by_id(wine_id)
+    if not wine:
+        flash("Wine not found", "danger")
+        return redirect(url_for('index'))
+
+    try:
+        consumed = int(request.form['consumed_bottles'])
+        if consumed <= 0 or consumed > wine.quantity:
+            flash("Nombre de bouteilles consommées invalide.", "danger")
+            return redirect(url_for('wine_detail', wine_id=wine_id))
+
+        event = Event(
+            wine_id=wine_id,
+            people=request.form.get('people'),
+            food=request.form.get('food'),
+            notes=request.form.get('notes'),
+            consumed_bottles=consumed
+        )
+        Event.add_event(event)
+
+        wine.quantity -= consumed
+        wine.save()
+
+        flash(f"Événement ajouté et {consumed} bouteille(s) retirée(s).", "success")
+    except ValueError:
+        flash("Erreur dans le formulaire", "danger")
+
+    return redirect(url_for('wine_detail', wine_id=wine_id))
+
 
 
 if __name__ == '__main__':
