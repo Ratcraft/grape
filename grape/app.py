@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from grape import config
 from grape.models.region import Region
-from models.wine_model import Wine
+from models.wine import Wine
 from models.event import Event
 from database.db import init_db
 
