@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2 class="mb-4">Calendrier des vins</h2>
+
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{{ url_for('wine_calendar', year=current_year - 4) }}" class="btn btn-outline-secondary">&laquo; 4 années avant</a>
+        <a href="{{ url_for('wine_calendar', year=current_year + 4) }}" class="btn btn-outline-secondary">4 années après &raquo;</a>
+    </div>
+
+    <div class="row">
+        {% for year in years %}
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-header text-center bg-dark text-white">{{ year }}</div>
+                    <div class="card-body">
+                        <div class="row g-2">
+                            {% for month in range(1, 13) %}
+                                {% set wines = expiring_by_year_month[year][month] %}
+                                <div class="col-3">
+                                    <div class="p-2 text-center rounded {% if wines %}bg-danger text-white{% else %}bg-light{% endif %}">
+                                        {{ "{:02d}".format(month) }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <hr class="my-4">
+    <h3>Vins expirant par année</h3>
+
+    {% for year in years %}
+        {% set vins_exp_year = [] %}
+        {% for month_wines in expiring_by_year_month[year].values() %}
+            {% for wine in month_wines %}
+                {% set _ = vins_exp_year.append(wine) %}
+            {% endfor %}
+        {% endfor %}
+
+        {% if vins_exp_year %}
+            <h4 class="mt-4">{{ year }}</h4>
+            <ul class="list-group mb-3">
+                {% for wine in vins_exp_year %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ wine.name }}</strong> ({{ wine.year }}) — {{ wine.type }}
+                            <br>
+                            <small class="text-muted">À consommer avant le {{ wine.expiration_date }}</small>
+                        </div>
+                        <a href="{{ url_for('wine_detail', wine_id=wine.id) }}" class="btn btn-sm btn-outline-primary">Détails</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endfor %}
+
+
+{% endblock %}

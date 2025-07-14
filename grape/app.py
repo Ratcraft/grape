@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 from grape import config
 from grape.models.region import Region
@@ -171,7 +173,34 @@ def add_event(wine_id):
 
     return redirect(url_for('wine_detail', wine_id=wine_id))
 
+@app.route('/calendar')
+def wine_calendar():
+    current_year = request.args.get('year', datetime.now().year, type=int)
+    years = list(range(current_year, current_year + 4))  # 4 années par page
 
+    # Récupère tous les vins avec date d’expiration non nulle
+    all_wines = Wine.get_all_wines()
+    expiring_wines = [
+        wine for wine in all_wines if wine.expiration_date
+    ]
+
+    # Trie les vins par mois et année
+    expiring_by_year_month = {
+        year: {month: [] for month in range(1, 13)} for year in years
+    }
+    for wine in expiring_wines:
+        try:
+            exp_date = datetime.strptime(wine.expiration_date, "%Y-%m-%d")
+            if exp_date.year in expiring_by_year_month:
+                expiring_by_year_month[exp_date.year][exp_date.month].append(wine)
+        except:
+            pass
+
+    for year in expiring_by_year_month:
+        for month in expiring_by_year_month[year]:
+            expiring_by_year_month[year][month].sort(key=lambda w: w.expiration_date or "")
+
+    return render_template('wine_calendar.html', years=years, expiring_by_year_month=expiring_by_year_month, current_year=current_year)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -38,7 +38,8 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('index') }}"><i class='bx bx-home me-2'></i>GRAPE : Gestion de cave à vin</a>
-            <div class="d-flex">
+            <div class="d-flex gap-3">
+                <a href="{{ url_for('wine_calendar') }}" class="btn btn-outline-info" >Calendrier des vins</a>
                 <a href="{{ url_for('add_wine') }}" class="btn btn-outline-success"> <i class='bx bx-plus'></i>
                     Ajouter un nouveau vin</a>
             </div>
