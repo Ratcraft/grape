@@ -12,17 +12,20 @@
       <input type="number" class="form-control" id="year" name="year" placeholder="e.g 2001" required>
 
       <label for="price" class="form-label mt-3">Prix (en €)</label>
-      <input type="number" step="0.01" class="form-control" id="price" placeholder="e.g 15" name="price">
+      <input type="number" step="0.01" class="form-control" id="price" name="price" placeholder="e.g 15">
 
       <label for="purchase_location" class="form-label mt-3">Lieu d'achat</label>
       <input type="text" class="form-control" id="purchase_location" name="purchase_location" placeholder="Carrefour / Intermarché">
+
+      <label for="medals" class="form-label mt-3">Médailles</label>
+      <input type="text" class="form-control" id="medals" name="medals" placeholder="Concours Général 2023, Médaille d'Or">
     </div>
 
     <div class="col-md-6">
       <label for="type" class="form-label">Type</label>
       <input type="text" class="form-control" id="type" name="type" placeholder="Rouge / Blanc / Rosé" required>
 
-      <label for="quantity" class="form-label mt-3">Quantité (en bouteille)</label>
+      <label for="quantity" class="form-label mt-3">Quantité (en bouteilles)</label>
       <input type="number" class="form-control" id="quantity" name="quantity" placeholder="e.g 8" required>
 
       <label for="volume_ml" class="form-label mt-3">Volume de la bouteille (en ml)</label>
@@ -30,9 +33,20 @@
 
       <label for="cellar_slot" class="form-label mt-3">Emplacement dans la cave</label>
       <input type="text" class="form-control" id="cellar_slot" name="cellar_slot" placeholder="A3">
+
+      <label for="expiration_date" class="form-label mt-3">Date d'expiration</label>
+      <input type="date" class="form-control" id="expiration_date" name="expiration_date">
+
+      <label for="region_id" class="form-label mt-3">Région</label>
+      <select class="form-select" id="region_id" name="region_id">
+        <option value="" selected>-- Choisir une région --</option>
+        {% for region in regions %}
+          <option value="{{ region.id }}">{{ region.name }}</option>
+        {% endfor %}
+      </select>
     </div>
   </div>
+
   <button type="submit" class="btn btn-primary fs-5">Ajouter le vin</button>
 </form>
-
 {% endblock %}

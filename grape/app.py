@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from grape import config
+from grape.models.region import Region
 from models.wine_model import Wine
 from models.event import Event
 from database.db import init_db
@@ -14,35 +15,55 @@ def index():
     name_filter = request.args.get("name", "")
     min_quantity = request.args.get("min_quantity", "")
     year_filter = request.args.get("year", "")
+    region_id_filter = request.args.get("region_id", "")
 
-    wines = Wine.get_all_wines_filtered(name_filter, min_quantity, year_filter)
-    return render_template("index.html", wines=wines)
+    wines = Wine.get_all_wines_filtered(name_filter, min_quantity, year_filter, region_id_filter)
+    regions = Region.get_all()
+
+    return render_template("index.html", wines=wines, regions=regions)
 
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_wine():
-    if request.method == 'POST':
-        try:
-            wine = Wine(
-                name=request.form['name'],
-                year=int(request.form['year']),
-                type=request.form['type'],
-                quantity=int(request.form['quantity']),
-                price=float(request.form['price']),
-                volume_ml=int(request.form['volume_ml']),
-                purchase_location=request.form['purchase_location'],
-                cellar_slot=request.form['cellar_slot'],
-                is_favorite=False
-            )
-            Wine.add_wine(wine)
-            flash("Vin ajouté avec succès.", "success")
-            return redirect(url_for('index'))
-        except Exception as e:
-            flash(f"Erreur lors de l'ajout : {e}", "danger")
-    return render_template('add_wine.html')
+    if request.method == "POST":
+        name = request.form.get("name")
+        year = request.form.get("year", type=int)
+        wine_type = request.form.get("type")
+        quantity = request.form.get("quantity", type=int)
+        price = request.form.get("price", type=float)
+        volume_ml = request.form.get("volume_ml", type=int)
+        cellar_slot = request.form.get("cellar_slot")
+        purchase_location = request.form.get("purchase_location")
+        medals = request.form.get("medals")
+        expiration_date = request.form.get("expiration_date") or None
+        region_id = request.form.get("region_id", type=int)
+
+        region = Region.get_by_id(region_id) if region_id else None
+
+        wine = Wine(
+            name=name,
+            year=year,
+            wine_type=wine_type,
+            quantity=quantity,
+            price=price,
+            volume_ml=volume_ml,
+            cellar_slot=cellar_slot,
+            purchase_location=purchase_location,
+            is_favorite=False,
+            medals=medals,
+            expiration_date=expiration_date,
+            region=region
+        )
+
+        Wine.add_wine(wine)
+        flash("Vin ajouté avec succès", "success")
+        return redirect(url_for("index"))  # ou autre route de ton choix
+
+    regions = Region.get_all()  # Assure-toi que cette méthode existe
+    return render_template("add_wine.html", regions=regions)
 
 
-@app.route("/wine/<int:wine_id>")
+@app.route("/wine/<int:wine_id>", methods=['GET'])
 def wine_detail(wine_id):
     wine = Wine.get_wine_by_id(wine_id)
     if not wine:
@@ -50,11 +71,11 @@ def wine_detail(wine_id):
         return redirect(url_for('index'))
 
     events = Event.get_events_for_wine(wine_id)
-    return render_template("wine_detail.html", wine=wine, events=events)
+    regions = Region.get_all()
+    return render_template("wine_detail.html", wine=wine, events=events, regions=regions)
 
 
-
-@app.route('/wine/<int:wine_id>/edit', methods=['POST'])
+@app.route('/wine/<int:wine_id>', methods=['POST'])
 def edit_wine(wine_id):
     wine = Wine.get_wine_by_id(wine_id)
     if wine:
@@ -66,10 +87,15 @@ def edit_wine(wine_id):
         wine.volume_ml = int(request.form['volume_ml'])
         wine.purchase_location = request.form['purchase_location']
         wine.cellar_slot = request.form['cellar_slot']
+        wine.medals = request.form['medals']
+        wine.expiration_date = request.form['expiration_date']
+        wine.region = Region.get_by_id(request.form['region_id'])
+
         wine.save()
         flash("Modifications enregistrées.", "success")
     else:
         flash("Vin non trouvé.", "danger")
+
     return redirect(url_for('wine_detail', wine_id=wine_id))
 
 

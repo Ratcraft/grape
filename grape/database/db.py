@@ -18,8 +18,12 @@ def init_db():
             volume_ml INTEGER,
             cellar_slot TEXT,
             purchase_location TEXT,
-            is_favorite BOOLEAN DEFAULT 0
-        )
+            is_favorite BOOLEAN DEFAULT 0,
+            medals TEXT,
+            expiration_date DATE,
+            region_id INTEGER,
+            FOREIGN KEY (region_id) REFERENCES regions(id)
+        );
     """)
 
     cursor.execute("""

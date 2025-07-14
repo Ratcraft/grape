@@ -16,6 +16,13 @@
 
       <label for="purchase_location" class="form-label mt-3">Lieu d'achat</label>
       <input type="text" class="form-control" id="purchase_location" name="purchase_location" value="{{ wine.purchase_location or '' }}">
+
+      <label for="medals" class="form-label mt-3">Médailles</label>
+      <input type="text" class="form-control" id="medals" name="medals" value="{{ wine.medals or '' }}">
+
+      <label for="expiration_date" class="form-label mt-3">Date d'expiration</label>
+      <input type="date" class="form-control" id="expiration_date" name="expiration_date"
+             value="{{ wine.expiration_date }}">
     </div>
 
     <div class="col-md-6">
@@ -30,13 +37,23 @@
 
       <label for="cellar_slot" class="form-label mt-3">Emplacement dans la cave</label>
       <input type="text" class="form-control" id="cellar_slot" name="cellar_slot" value="{{ wine.cellar_slot or '' }}">
+
+      <label for="region_id" class="form-label mt-3">Région</label>
+      <select class="form-select" id="region_id" name="region_id">
+        <option value="">-- Sélectionnez une région --</option>
+        {% for region in regions %}
+          <option value="{{ region.id }}" {% if wine.region and wine.region.id == region.id %}selected{% endif %}>
+            {{ region.name }}
+          </option>
+        {% endfor %}
+      </select>
     </div>
   </div>
 
-    <div class="col-12 mt-3">
-        <button type="submit" class="btn btn-primary">Sauvegarder les changements <i class='bx bx-edit'></i></button>
-        <a href="{{ url_for('delete_wine', wine_id=wine.id) }}" class="btn btn-danger ms-2">Supprimer le vin <i class='bx bx-trash'></i> </a>
-    </div>
+  <div class="col-12 mt-3">
+    <button type="submit" class="btn btn-primary">Sauvegarder les changements <i class='bx bx-edit'></i></button>
+    <a href="{{ url_for('delete_wine', wine_id=wine.id) }}" class="btn btn-danger ms-2">Supprimer le vin <i class='bx bx-trash'></i> </a>
+  </div>
 </form>
 
 <form method="POST" action="{{ url_for('toggle_favorite', wine_id=wine.id) }}">

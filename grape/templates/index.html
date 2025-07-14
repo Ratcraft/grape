@@ -1,14 +1,24 @@
 {% extends "layout.html" %}
 {% block content %}
-    <form method="get" class="row g-3 mb-4">
-        <div class="col-md-4">
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-md-3">
             <input type="text" name="name" value="{{ request.args.get('name', '') }}" class="form-control" placeholder="Chercher par nom">
         </div>
         <div class="col-md-3">
             <input type="number" name="min_quantity" value="{{ request.args.get('min_quantity', '') }}" class="form-control" placeholder="Quantité minimum">
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <input type="number" name="year" value="{{ request.args.get('year', '') }}" class="form-control" placeholder="Année du vin">
+        </div>
+        <div class="col-md-2">
+            <select class="form-select" id="region_id" name="region_id">
+                <option value="" selected disabled>Région du vin</option>
+                {% for region in regions %}
+                    <option value="{{ region.id }}" {% if request.args.get('region_id') == region.id|string %}selected{% endif %}>
+                        {{ region.name }}
+                    </option>
+                {% endfor %}
+            </select>
         </div>
         <div class="col-md-2">
             <button type="submit" class="btn btn-primary w-100">Filtrer</button>
