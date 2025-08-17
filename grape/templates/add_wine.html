@@ -28,8 +28,18 @@
       <label for="quantity" class="form-label mt-3">Quantité (en bouteilles)</label>
       <input type="number" class="form-control" id="quantity" name="quantity" placeholder="e.g 8" required>
 
-      <label for="volume_ml" class="form-label mt-3">Volume de la bouteille (en ml)</label>
-      <input type="number" class="form-control" id="volume_ml" name="volume_ml" placeholder="e.g 75">
+      <label for="volume_ml" class="form-label mt-3">Volume de la bouteille (L)</label>
+      <select class="form-select" id="volume_select" name="volume_select">
+          <option value="">-- Choisir un volume --</option>
+          <option value="500">0.5 L</option>
+          <option value="750">0.75 L</option>
+          <option value="1500">1.5 L</option>
+          <option value="other">Autre...</option>
+      </select>
+
+      <!-- Champ caché pour entrer un autre volume -->
+      <input type="number" class="form-control mt-2 d-none" id="volume_ml" name="volume_ml" placeholder="Entrez la contenance en ml">
+
 
       <label for="cellar_slot" class="form-label mt-3">Emplacement dans la cave</label>
       <input type="text" class="form-control" id="cellar_slot" name="cellar_slot" placeholder="A3">
@@ -49,4 +59,25 @@
 
   <button type="submit" class="btn btn-primary fs-5">Ajouter le vin</button>
 </form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      const select = document.getElementById("volume_select");
+      const input = document.getElementById("volume_ml");
+
+      select.addEventListener("change", function() {
+          if (this.value === "other") {
+              input.classList.remove("d-none");
+              input.required = true;
+              input.value = "";  // reset si on re-ouvre
+          } else {
+              input.classList.add("d-none");
+              input.required = false;
+              input.value = this.value || "";
+          }
+      });
+  });
+</script>
+
 {% endblock %}
+

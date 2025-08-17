@@ -33,7 +33,6 @@ def add_wine():
         wine_type = request.form.get("type")
         quantity = request.form.get("quantity", type=int)
         price = request.form.get("price", type=float)
-        volume_ml = request.form.get("volume_ml", type=int)
         cellar_slot = request.form.get("cellar_slot")
         purchase_location = request.form.get("purchase_location")
         medals = request.form.get("medals")
@@ -41,6 +40,18 @@ def add_wine():
         region_id = request.form.get("region_id", type=int)
 
         region = Region.get_by_id(region_id) if region_id else None
+
+        volume_ml = request.form.get("volume_ml")
+        volume_select = request.form.get("volume_select")
+
+        # Si "Autre" est choisi, on garde volume_ml
+        # Sinon, on prend directement la valeur du select
+        if volume_select and volume_select != "other":
+            volume_ml = int(volume_select) if volume_select else None
+        elif volume_ml:
+            volume_ml = int(volume_ml)
+        else:
+            volume_ml = None
 
         wine = Wine(
             name=name,
